@@ -18,17 +18,17 @@
         <!-- Messages: style can be found in dropdown.less-->
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="{{ asset('images/avatar5.png') }}" class="user-image" alt="Admin Image">
-            {{--<span class="hidden-xs">{{ Auth::user()->name }}</span>--}}
+            <img src="{{ asset('assets/image/avatar.png') }}" class="user-image" alt="Admin Image">
+            <span class="hidden-xs">{{ Auth::user()->name }}</span>
           </a>
           <ul class="dropdown-menu">
             <!-- User image -->
             <li class="user-header">
-              <img src="{{ asset('images/avatar5.png') }}" class="img-circle" alt="Admin Image">
+              <img src="{{ asset('assets/image/avatar.png') }}" class="img-circle" alt="Admin Image">
 
-              {{--<p>--}}
-                {{--{{ Auth::user()->name }}--}}
-              {{--</p>--}}
+              <p>
+                {{ Auth::user()->name }}
+              </p>
             </li>
             <!-- Menu Body -->
 

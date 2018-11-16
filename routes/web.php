@@ -22,6 +22,7 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index');
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/myfiles', 'HomeController@myfiles')->name('myfiles');
 });
 
 //Route::group(['prefix' => 'admin',  'middleware' => 'auth:admin'], function() {
