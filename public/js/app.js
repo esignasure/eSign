@@ -48597,7 +48597,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: "common",
     data: function data() {
         return {
-            serverPath: 'http://localhost:8000/'
+            serverPath: 'http://70.37.56.58/'
         };
     },
     methods: {}
