@@ -20,6 +20,10 @@ a:hover, a:focus {
     text-decoration: none;
     color: #4f6df5;
 }
+.link-btn {
+    color: #4f6df5!important;
+    cursor: pointer;
+}
 /*end*/
 
 .main-container {
@@ -101,6 +105,12 @@ a:hover, a:focus {
     transform: translate3d(0, -3px, 0);
     -webkit-transform: translate3d(0, -3px, 0);
     -moz-transform: translate3d(0, -3px, 0);
+}
+.form-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: capitalize;
 }
 .btn-blue{
     background-color: #4f6df5;
@@ -452,6 +462,9 @@ input[type=search]:focus {
     font-size: 18px;
     font-weight: 600;
 }
+.folder-container {
+    padding: 0 10px;
+}
 .folder-container ul {
     margin: 0;
     padding: 0;
@@ -459,7 +472,7 @@ input[type=search]:focus {
 }
 .folder-container ul li{
     float: left;
-    margin-right: 20px;
+    margin: 0 10px 10px 0;
 }
 .folder {
     font-size: 38px;
@@ -471,16 +484,60 @@ input[type=search]:focus {
     font-size: 13px;
     color: #828282;
     font-weight: 300;
-    width: 75px;
+    width: 80px;
     text-align: center;
-}
+    /*text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;*/
+}/*
 .folder-container ul li {
     margin-bottom: 10px;
+}*/
+.empty-directory {
+    background-color: #f3fafe;
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+    font-weight: 600;
 }
 .folder-navigation {
     font-size: 18px;
-    margin: 20px 10px;
+    margin: 30px 10px 20px 5px;
 }
+.folder-box {
+    padding: 5px 0;
+    border: 1px solid #ffffff;
+    cursor: pointer;
+}
+.folder-box:hover {
+    background-color: #f7f9fb;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+}
+.folder-delete {
+    font-size: 30px;
+    color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: none;
+    background: #eee;
+    opacity: 0.7;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+.delete-folder .folder-delete {
+    display: block;
+}
+.icon-delete {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -12px;
+}
+
 .drag-text {
     color: #828282;
     font-size: 14px;
@@ -491,7 +548,29 @@ input[type=search]:focus {
     padding: 0 0 20px 0;
     margin-top: 20px;
 }
-/*Medial query*/
+
+
+/*Notification css*/
+
+.notification-title {
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+.notification-content ul {
+    padding-left: 20px;
+}
+.notification-content {
+    font-size: 14px;
+    letter-spacing: 1px
+}
+.notifications {
+    top: 20px !important;
+    right: 15px !important;
+}
+.color-red {
+    color: #FF0000!important;
+}
+/*Media query*/
 @media (max-width: 1450px) {
     .main-container {
         width: 100%;

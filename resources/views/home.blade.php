@@ -1,5 +1,5 @@
 @extends('layouts.main')
-
+@section('title', 'Home')
 @section('content')
     <div class="container-fluid position-relative">
         <?php
@@ -17,6 +17,7 @@
                 <input type="submit" name="submit" class="d-none">
             </form>
         </div>--}}
+
 
         <div class="main-container welcome-box-margin">
             <div class="row">
