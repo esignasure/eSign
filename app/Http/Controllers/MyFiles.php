@@ -99,4 +99,11 @@ class MyFiles extends Controller
     {
         return $this->myFiles->deleteFolder($id);
     }
+
+    public function uploadDocument(Request $request) {
+        return $this->myFiles->uploadDocument($request->all());
+    }
+    public function deleteDocument($id) {
+        return $this->myFiles->deleteDocument($id);
+    }
 }

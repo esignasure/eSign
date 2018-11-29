@@ -27,6 +27,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('get-sub-folders/{folderId}', 'MyFiles@getSubFolders');
     Route::post('create-folder', 'MyFiles@createFolder');
     Route::delete('delete-folder/{folderId}', 'MyFiles@deleteFolder');
+    Route::delete('delete-document/{documentId}', 'MyFiles@deleteDocument');
+    Route::post('upload-document', 'MyFiles@uploadDocument');
 });
 
 //Route::group(['prefix' => 'admin',  'middleware' => 'auth:admin'], function() {

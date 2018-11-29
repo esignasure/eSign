@@ -10,6 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/libs/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/element.css') }}">
         <link rel="stylesheet" href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}">
 
@@ -39,5 +40,7 @@
         <script src="{{ asset('js/libs/jquery-3.2.1.slim.min.js') }}"></script>
         <script src="{{ asset('js/libs/popper.min.js') }}"></script>
         <script src="{{ asset('js/libs/bootstrap.min.js') }}"></script>
+        
+        @yield('scripts')
     </body>
 </html>

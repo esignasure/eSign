@@ -385,8 +385,9 @@ input[type=search]:focus {
     position: fixed;
     border-right: 1px solid #e0e0e0;
     width: 300px;
-    top: 105px;
-    bottom: 0;
+    top: 120px;
+    bottom: 0;max-height: 100%;
+overflow: auto;
 }
 .file-tool {
     position: fixed;
@@ -570,86 +571,18 @@ input[type=search]:focus {
 .color-red {
     color: #FF0000!important;
 }
-/*Media query*/
-@media (max-width: 1450px) {
-    .main-container {
-        width: 100%;
-    }
-    .main-container .row {
-        margin-right: auto;
-        margin-left: auto;
-    }
-    /*.brand {*/
-        /*left: 30px;*/
-    /*}*/
-    .meeting-responsive {
-        height: auto;
-        width: 100%;
-    }
-}
-@media (max-width: 1028px) {
-    .main-content {
-        padding-top: 180px;
-    }
-    .folder-list-wrapper {
-        top: 180px;
-    }
-    .file-tool {
-        top: 180px;
-    }
-}
-@media (min-width: 992px) {
-    .glance-buttons{
-        text-align: right;
-    }
-}
-@media (max-width: 991px) {
-    .quick-buttons{
-        display: inline !important;
-    }
-    .quick-buttons .access-button{
-        margin: 10px;
-    }
-    .welcome-box {
-        width: 100%;
-    }
-    .welcome-box h2{
-        margin-top: 20px;
-    }
-    .walk-me-box-container .box-details {
-        width: 25%;
-    }
-}
-@media (max-width: 767px) {
-    .welcome-box h2 {
-        margin-top: 50px;
-    }
-    .meeting-wrapper {
-        margin-top: 40px;
-        border-top: 1px solid #bdd5e9;
-    }
-    .quick-main {
-        padding: 10px;
-    }
-    .walk-me-box-container .box-details {
-        width: 33.3333%;
-    }
-}
-@media (max-width: 568px) {
-    .header {
-        padding: 10px 0 8px 0;
-    }
-    .quick-main .access-button {
-        margin: 10px 0;
-        width: 100%;
-    }
-    .btn-notification-wrapper, .text-notification-wrapper {
-        clear: both;
-        width: 100%;
-        margin-top: 10px;
-        text-align: center;
-    }
-    .walk-me-box-container .box-details {
-        width: 100%;
-    }
-}
+
+.documents-container ul{list-style: none;margin: 0;
+padding-left: 30px;}
+.documents-container ul li{display: inline-block;width:95%;min-height: 25px;cursor: pointer;}
+.documents-container ul li a .file{margin-right: 5px}
+.document-delete{display: none;color: red;cursor: pointer;font-size: 15px}
+.documents-container ul li:hover .document-delete{display: block}
+.file-container .dropzone{/*padding: 0;border: none;*/background-color: #f3fafe;
+    border: 1px dashed #d0d0d0;
+    padding: 0 0 20px 0;
+    margin-top: 20px;}
+.file-container .dropzone .dz-message{margin: 0;border: none;}
+
+
+

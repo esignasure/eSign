@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MyFilesRepository extends Repository
 {
@@ -37,7 +38,7 @@ class MyFilesRepository extends Repository
     }
 
     /**
-     * get list of assets class
+     * get list of all root folder
      * @return mixed
      */
     public function getFolders()
@@ -53,9 +54,11 @@ class MyFilesRepository extends Repository
                 ->whereNull('usd.user_directory_id')
                 ->whereNull('ud.deleted_at')->get();
 
-            $response = array($this->common->success => true);
+            $documents = $this->getDocuments($userId, 0);
 
-            $response['data'] = $folders;
+            $response = array($this->common->success => true);
+            $response['data']['folders'] = $folders;
+            $response['data']['documents'] = $documents;
 
         } catch (\Exception $e) {
             $response = $this->common->getErrorMessage($e->getMessage());
@@ -82,15 +85,41 @@ class MyFilesRepository extends Repository
                 ->where('upd.user_parent_directory_id', $folderId)
                 ->whereNull('ud.deleted_at')->get();
 
+            $documents = $this->getDocuments($userId, $folderId);
+
             $response = array($this->common->success => true);
 
-            $response['data'] = $folders;
+            $response['data']['folders'] = $folders;
+            $response['data']['documents'] = $documents;
 
         } catch (\Exception $e) {
             $response = $this->common->getErrorMessage($e->getMessage());
         }
 
         return Response::json($response);
+    }
+
+    /**
+     * get list of all root folder
+     * @return mixed
+     */
+    public function getDocuments($userId, $folderId)
+    {
+
+        $documents = [];
+    
+        try {
+
+            $documents = DB::table('user_documents as ud')
+                ->where('ud.user_id', $userId)
+                ->where('ud.user_directory_id', $folderId)
+                ->whereNull('ud.deleted_at')->get();
+            
+        } catch (\Exception $e) {
+            $response = $this->common->getErrorMessage($e->getMessage());
+        }
+
+        return $documents;
     }
 
 
@@ -209,5 +238,83 @@ class MyFilesRepository extends Repository
             'name.required' => 'Folder name is required.',
             // 'name.unique'  => 'Asset class is already exists. Please try another.'
         ]);
+    }
+
+    public function uploadDocument($data){
+        $userId = Auth::user()->id;
+        
+        try {
+
+            $userDirectoryId = $data['user_directory_id'];
+        
+            $fileName = time() . '.' . $data['file']->getClientOriginalExtension();       
+            $originalName = $data['file']->getClientOriginalName();
+            $pathToStoreFile = $userId . "/documents/" . $userDirectoryId;
+
+            $path = Storage::putFileAs($pathToStoreFile, $data['file'], $fileName);
+
+                Db::beginTransaction();
+            
+                /*$saveData['user_directory_id'] = $userDirectoryId;
+                $saveData['file_path']=$path;
+                $saveData['file_name']=$fileName;
+                $saveData['file_original_name']=$originalName;*/
+
+                // create user document model objet to store the data
+                $userDocument = new UserDocuments();
+
+                $userDocument->user_id = $userId;
+                $userDocument->user_directory_id = $userDirectoryId;
+                $userDocument->file_path = $path;
+                $userDocument->file_name = $fileName;
+                $userDocument->file_original_name = $originalName;
+
+                $userDocument->save();
+
+                DB::commit();
+                $message = 'File Uploaded successfully.';
+                $response = array($this->common->success => true, 'message' => $message);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response = array(
+                $this->common->success => false,
+                'error' => [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
+        return Response::json($response);
+    }
+     /**
+     * delete Document
+     * @param $id
+     * @return mixed
+     */
+    public function deleteDocument($id)
+    {
+        try {
+            Db::beginTransaction();
+            $userDocument = new UserDocuments();
+            
+            /*$userDocument->deleted_at = Carbon::now();
+            $userDocument->delete($id);*/
+            UserDocuments::find($id)->delete();
+            Db::commit();
+            $response = array($this->common->success => true, 'message' => 'Document deleted successfully.');
+
+        } catch (\Exception $e) {
+            $response = array(
+                $this->common->success => false,
+                'error' => [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
+
+        return Response::json($response);
+
     }
 }

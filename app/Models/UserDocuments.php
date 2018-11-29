@@ -12,6 +12,7 @@ class UserDocuments extends Model
     public $table = "user_documents";
 
     protected $fillable = [
+        'user_id',
         'user_directory_id',
         'file_name',
         'file_original_name',

@@ -28,28 +28,45 @@
                             </div>
                         </li>
                     </ul>
-                    <div v-else class="empty-directory">This folder is empty.</div>
+                    <div v-if="!folders.length && !documents.length" class="empty-directory">This folder is empty.</div>
                     <div class="clearfix"></div>
+                </div>
+
+                <div class="documents-container">
+                    <ul v-if="documents.length">
+                        <li v-for="(document, index) in documents">
+                            <a class="link-btn" v-bind:href="document.file_path" target="_blank">
+                                <i class="fa fa-file file"></i><span class="folder-text" v-bind:title="document.file_original_name">{{document.file_original_name}}</span>
+                                
+                            </a>
+                            <span class="document-delete pull-right" @click="deleteDocument(document.id)">
+                                    <i class="fa fa-trash "></i>
+                                </span>
+                            
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="file-content">
                 <div class="file-container">
-                    <div class="text-center drag-drop-box">
-                        <br/>
-                        <div class="drag-text">Drag and drop files onto this windows to upload.</div>
-
-                        <label style="font-size: 16px;margin: 10px 0;">Or</label>
-                        <br/>
-                        <a title="Upload Files" class="link-btn"><i class="fa fa-upload mr-2" aria-hidden="true"></i>Click here to upload.</a>
-
-                    </div>
+                    <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" @vdropzone-success="onComplete" @vdropzone-sending="sendingEvent" @vdropzone-max-files-exceeded="maxFilesExceeded" :useCustomSlot=true>
+                        <div class="dropzone-custom-content1">
+                            <div class="text-center drag-drop-box1">
+                                <br/>
+                                <div class="drag-text">Drag and drop files onto this windows to upload.</div>
+                                <label style="font-size: 16px;margin: 10px 0;">Or</label>
+                                <br/>
+                                <a title="Upload Files" class="link-btn"><i class="fa fa-upload mr-2" aria-hidden="true"></i>Click here to upload.</a>
+                            </div>
+                        </div>
+                    </vue-dropzone>
                 </div>
             </div>
             <div class="file-tool">
                 <ul class="file-tool-list">
-                    <li>
+                    <!--<li>
                         <a class="link-btn" title="Upload Files"><i class="fa fa-upload mr-2" aria-hidden="true"></i>Upload Documents</a>
-                    </li>
+                    </li>-->
                     <li>
                         <a class="link-btn" title="New Folder" @click="openCreateFolderModal"><i class="fa fa-folder-o mr-2" aria-hidden="true"></i>New Folder</a>
                     </li>
@@ -99,6 +116,9 @@
 <script>
     import notify from './shared/Notify'
     import common from './shared/Common'
+    import vue2Dropzone from 'vue2-dropzone'
+    import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+
     require('../main');
     export default {
         name: "documents",
@@ -107,6 +127,7 @@
                 showLoader: false,
                 url: 'create-folder',
                 folders: [],
+                documents: [],
                 showDeleteButton: false,
                 currentFolder: {
                     parentId:0,
@@ -117,6 +138,14 @@
                     parentId:0,
                     userId: '',
                     name: ''
+                },
+                dropzoneOptions: {
+                    url: common.data().serverPath +'/upload-document',
+                    maxFilesize: 2,
+                    maxFiles: 2,
+                    headers: {
+                        "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content
+                    }
                 }
             }
         },
@@ -125,7 +154,7 @@
             this.getFolders();
         },
         components: {
-
+            vueDropzone: vue2Dropzone
         },
         methods: {
             /**
@@ -137,7 +166,8 @@
                 Axios.get(url).then((response) => {
                     this.showLoader = false;
                     if (response.data.success) {
-                        this.folders = response.data.data;
+                        this.folders = response.data.data.folders;
+                        this.documents = response.data.data.documents;
                         this.currentFolder.parentId = 0;
                         this.folderNavigationArray = [];
                     } else {
@@ -160,7 +190,8 @@
                 Axios.get(url).then((response) => {
                     this.showLoader = false;
                     if (response.data.success) {
-                        this.folders = response.data.data;
+                        this.folders = response.data.data.folders;
+                        this.documents = response.data.data.documents;
                         this.currentFolder.parentId = folderId;
                         if (pushNavigation) {
                             this.folderNavigationArray.push(folderId);
@@ -274,7 +305,65 @@
                 }
             },
 
+            /**
+             * delete the specific document
+             * @param id
+             */
+            deleteDocument: function (id) { // save annual rate
+                if (confirm("Are you sure you want to delete this document?")) {
+                    this.showLoader = true;
+                    const url = common.data().serverPath + 'delete-document/' + id;
+                    Axios.delete(url)
+                        .then((response) => {
+                            this.showLoader = false;
+                            if (response.data.success) {
+                                notify.methods.notifySuccess(response.data.message);
+                                if (this.currentFolder.parentId > 0) {
+                                    this.getSubFolderAndFiles(this.currentFolder.parentId, false);
+                                } else {
+                                    this.getFolders();
+                                }
+
+                            } else {
+                                notify.methods.notifyError(response.data.error.message);
+                            }
+                        })
+                        .catch((error) => {
+                            this.showLoader = false;
+                            notify.methods.notifyError('Something went wrong. Please try again.');
+                        })
+                }
+            },
+
+            /**
+             * Append Parameter to dropzone
+             * 
+             */
+            sendingEvent: function(file,xhr,formData){
+                formData.append('user_directory_id',this.currentFolder.parentId);
+            },
+            onComplete : function(file, response){
+                console.log(response);
+                if(response.success){
+                    this.$refs.myVueDropzone.removeAllFiles();
+                    notify.methods.notifySuccess(response.message);
+                    if (this.currentFolder.parentId > 0) {
+                        this.getSubFolderAndFiles(this.currentFolder.parentId, false);
+                    } else {
+                        this.getFolders();
+                    }
+                }else{
+                    notify.methods.notifyError(response.error.message);
+                }
+                
+            },
+            maxFilesExceeded : function (file){
+            console.log('LIMIT EXCEEDDED');
+            console.log(file.name);
+                notify.methods.notifyError('You have reached max file upload limit. '+file.name+' has not been uploaded.');
+            },
             testMethod: function () {
+
                 notify.methods.notifySuccess('this is success message');
             }
         }
