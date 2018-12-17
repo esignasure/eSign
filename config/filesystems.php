@@ -65,5 +65,12 @@ return [
         ],
 
     ],
+    'dropbox' => [
+        'driver' => 'dropbox',
+        'key' => env('DROPBOX_KEY'),
+        'secret' => env('DROPBOX_SECRET'),
+        'access_token' => env('DROPBOX_TOKEN'),
+        'redirect_url' => env('DROPBOX_REDIRECT_URL')
+    ],
 
 ];

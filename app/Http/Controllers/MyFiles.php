@@ -106,4 +106,24 @@ class MyFiles extends Controller
     public function deleteDocument($id) {
         return $this->myFiles->deleteDocument($id);
     }
+    public function getDocument($documentId,$folerId) {
+        return $this->myFiles->getDocument($documentId,$folerId);
+    }
+    /**
+     * Create new user signature
+     *
+     * @return mixed
+     */
+    public function createSignature(Request $request){
+        return $this->myFiles->createSignature($request->all());
+    }
+    public function getUserSignatures(){
+        return $this->myFiles->getUserSignatures();
+    }
+    /*public function uploadSignature (Request $request){
+        return $this->myFiles->uploadSignature($request->all());
+    }*/
+    public function getAuthorizationUrl(){
+        return $this->myFiles->getAuthorizationUrl();
+    }
 }

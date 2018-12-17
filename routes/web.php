@@ -29,6 +29,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('delete-folder/{folderId}', 'MyFiles@deleteFolder');
     Route::delete('delete-document/{documentId}', 'MyFiles@deleteDocument');
     Route::post('upload-document', 'MyFiles@uploadDocument');
+    Route::get('/get-document/{documentId}/{folderId}', 'MyFiles@getDocument');
+    Route::post('create-signature', 'MyFiles@createSignature');
+    Route::get('get-signatures', 'MyFiles@getUserSignatures');
+    Route::get('get-auth-url', 'MyFiles@getAuthorizationUrl');
+    /*Route::post('upload-signature','MyFiles@uploadSignature');*/
 });
 
 //Route::group(['prefix' => 'admin',  'middleware' => 'auth:admin'], function() {
